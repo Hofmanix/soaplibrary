@@ -11,19 +11,18 @@ package io.spring.guides.gs_producing_web_service;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for idResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="idResponse">
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
  *       &lt;sequence>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
@@ -35,12 +34,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(name = "idResponse", propOrder = {
     "id"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
-    extends AuthenticatedRequest
+public class IdResponse
+    extends ErrorResponse
 {
 
     @XmlElement(required = true)

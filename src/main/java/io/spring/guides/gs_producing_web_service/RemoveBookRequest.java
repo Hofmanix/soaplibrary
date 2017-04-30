@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="bookId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -36,38 +36,38 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "bookId"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
+@XmlRootElement(name = "removeBookRequest")
+public class RemoveBookRequest
     extends AuthenticatedRequest
 {
 
     @XmlElement(required = true)
-    protected String id;
+    protected String bookId;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the bookId property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getBookId() {
+        return bookId;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the bookId property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setBookId(String value) {
+        this.bookId = value;
     }
 
 }

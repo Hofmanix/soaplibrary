@@ -11,23 +11,23 @@ package io.spring.guides.gs_producing_web_service;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for authenticatedRequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="authenticatedRequest">
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="token" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -35,39 +35,47 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "id"
+@XmlType(name = "authenticatedRequest", propOrder = {
+    "token"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
-    extends AuthenticatedRequest
-{
+@XmlSeeAlso({
+    ReturnBookRequest.class,
+    GetBookRequest.class,
+    AddBookRequest.class,
+    CancelBookingRequest.class,
+    BorrowBookRequest.class,
+    SetUserRoleRequest.class,
+    BookBookRequest.class,
+    GetBooksRequest.class,
+    RemoveBookRequest.class
+})
+public class AuthenticatedRequest {
 
     @XmlElement(required = true)
-    protected String id;
+    protected String token;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the token property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getToken() {
+        return token;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the token property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setToken(String value) {
+        this.token = value;
     }
 
 }

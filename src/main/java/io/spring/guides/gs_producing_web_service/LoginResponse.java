@@ -11,23 +11,23 @@ package io.spring.guides.gs_producing_web_service;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for book complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="book">
+ * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="author" type="{http://spring.io/guides/gs-producing-web-service}author"/>
- *         &lt;element name="available" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="token" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="account" type="{http://spring.io/guides/gs-producing-web-service}accountResponse"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,108 +37,91 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "book", propOrder = {
-    "id",
-    "name",
-    "author",
-    "available"
+@XmlType(name = "", propOrder = {
+    "status",
+    "token",
+    "account"
 })
-public class Book {
+@XmlRootElement(name = "loginResponse")
+public class LoginResponse {
 
     @XmlElement(required = true)
-    protected String id;
+    protected String status;
     @XmlElement(required = true)
-    protected String name;
+    protected String token;
     @XmlElement(required = true)
-    protected Author author;
-    protected int available;
+    protected AccountResponse account;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the status property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getStatus() {
+        return status;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the status property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setStatus(String value) {
+        this.status = value;
     }
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the token property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getToken() {
+        return token;
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the token property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setToken(String value) {
+        this.token = value;
     }
 
     /**
-     * Gets the value of the author property.
+     * Gets the value of the account property.
      * 
      * @return
      *     possible object is
-     *     {@link Author }
+     *     {@link AccountResponse }
      *     
      */
-    public Author getAuthor() {
-        return author;
+    public AccountResponse getAccount() {
+        return account;
     }
 
     /**
-     * Sets the value of the author property.
+     * Sets the value of the account property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Author }
+     *     {@link AccountResponse }
      *     
      */
-    public void setAuthor(Author value) {
-        this.author = value;
-    }
-
-    /**
-     * Gets the value of the available property.
-     * 
-     */
-    public int getAvailable() {
-        return available;
-    }
-
-    /**
-     * Sets the value of the available property.
-     * 
-     */
-    public void setAvailable(int value) {
-        this.available = value;
+    public void setAccount(AccountResponse value) {
+        this.account = value;
     }
 
 }

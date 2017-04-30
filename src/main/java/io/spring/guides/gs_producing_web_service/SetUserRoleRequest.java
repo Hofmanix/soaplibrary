@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="userRole" type="{http://spring.io/guides/gs-producing-web-service}userRole"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -36,38 +36,38 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "userRole"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
+@XmlRootElement(name = "setUserRoleRequest")
+public class SetUserRoleRequest
     extends AuthenticatedRequest
 {
 
     @XmlElement(required = true)
-    protected String id;
+    protected UserRole userRole;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the userRole property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link UserRole }
      *     
      */
-    public String getId() {
-        return id;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the userRole property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link UserRole }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setUserRole(UserRole value) {
+        this.userRole = value;
     }
 
 }

@@ -23,11 +23,12 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -36,38 +37,63 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "username",
+    "password"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
-    extends AuthenticatedRequest
-{
+@XmlRootElement(name = "loginRequest")
+public class LoginRequest {
 
     @XmlElement(required = true)
-    protected String id;
+    protected String username;
+    @XmlElement(required = true)
+    protected String password;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the username property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the username property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setUsername(String value) {
+        this.username = value;
+    }
+
+    /**
+     * Gets the value of the password property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets the value of the password property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPassword(String value) {
+        this.password = value;
     }
 
 }

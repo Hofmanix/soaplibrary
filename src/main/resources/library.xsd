@@ -1,18 +1,202 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
-    <xs:element name="getBookRequest">
+    <xs:element name="createAccountRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="id" type="xs:string"/>
+                <xs:element name="account" type="tns:account"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="authenticatedRequest">
+        <xs:sequence>
+            <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="statusResponse">
+        <xs:sequence>
+            <xs:element name="status" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+        <xs:complexType name="errorResponse">
+            <xs:complexContent>
+                <xs:extension base="tns:statusResponse">
+                    <xs:sequence>
+                        <xs:element name="error" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+        <xs:complexType name="idResponse">
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+    <xs:element name="loginRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="username" type="xs:string"/>
+                <xs:element name="password" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="loginResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
+                <xs:element name="account" type="tns:accountResponse"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAuthorsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+                <xs:element name="authors" type="tns:author" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getBooksRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="authorsId" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="available" type="xs:boolean"/>
+                        <xs:element name="bookName" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getBooksResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+                <xs:element name="books" type="tns:book" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="getBookResponse">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
                 <xs:element name="book" type="tns:book"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="borrowBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="bookId" type="xs:string"/>
+                        <xs:element name="beginDate" type="xs:date"/>
+                        <xs:element name="endDate" type="xs:date"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="returnBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="bookId" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="bookBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="bookId" type="xs:string"/>
+                        <xs:element name="beginDate" type="xs:date"/>
+                        <xs:element name="endDate" type="xs:date"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cancelBookingRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="bookId" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="addBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="book" type="tns:book"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="removeBookRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="bookId" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setUserRoleRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="userRole" type="tns:userRole"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
@@ -31,4 +215,32 @@
             <xs:element name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="account">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+            <xs:element name="username" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+            <xs:element name="dateOfBirth" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="accountResponse">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+            <xs:element name="username" type="xs:string"/>
+            <xs:element name="dateOfBirth" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="userRole">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="USER"/>
+            <xs:enumeration value="ADMINISTRATOR"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

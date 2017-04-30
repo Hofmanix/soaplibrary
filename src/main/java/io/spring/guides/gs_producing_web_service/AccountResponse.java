@@ -11,23 +11,26 @@ package io.spring.guides.gs_producing_web_service;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * <p>Java class for book complex type.
+ * <p>Java class for accountResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="book">
+ * &lt;complexType name="accountResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="author" type="{http://spring.io/guides/gs-producing-web-service}author"/>
- *         &lt;element name="available" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="surname" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="dateOfBirth" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,21 +40,26 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "book", propOrder = {
+@XmlType(name = "accountResponse", propOrder = {
     "id",
     "name",
-    "author",
-    "available"
+    "surname",
+    "username",
+    "dateOfBirth"
 })
-public class Book {
+public class AccountResponse {
 
     @XmlElement(required = true)
     protected String id;
     @XmlElement(required = true)
     protected String name;
     @XmlElement(required = true)
-    protected Author author;
-    protected int available;
+    protected String surname;
+    @XmlElement(required = true)
+    protected String username;
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "date")
+    protected XMLGregorianCalendar dateOfBirth;
 
     /**
      * Gets the value of the id property.
@@ -102,43 +110,75 @@ public class Book {
     }
 
     /**
-     * Gets the value of the author property.
+     * Gets the value of the surname property.
      * 
      * @return
      *     possible object is
-     *     {@link Author }
+     *     {@link String }
      *     
      */
-    public Author getAuthor() {
-        return author;
+    public String getSurname() {
+        return surname;
     }
 
     /**
-     * Sets the value of the author property.
+     * Sets the value of the surname property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Author }
+     *     {@link String }
      *     
      */
-    public void setAuthor(Author value) {
-        this.author = value;
+    public void setSurname(String value) {
+        this.surname = value;
     }
 
     /**
-     * Gets the value of the available property.
+     * Gets the value of the username property.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public int getAvailable() {
-        return available;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Sets the value of the available property.
+     * Sets the value of the username property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setAvailable(int value) {
-        this.available = value;
+    public void setUsername(String value) {
+        this.username = value;
+    }
+
+    /**
+     * Gets the value of the dateOfBirth property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public XMLGregorianCalendar getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    /**
+     * Sets the value of the dateOfBirth property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public void setDateOfBirth(XMLGregorianCalendar value) {
+        this.dateOfBirth = value;
     }
 
 }

@@ -11,21 +11,21 @@ package io.spring.guides.gs_producing_web_service;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for errorResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="errorResponse">
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}statusResponse">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -35,39 +35,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "id"
+@XmlType(name = "errorResponse", propOrder = {
+    "error"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
-    extends AuthenticatedRequest
+@XmlSeeAlso({
+    IdResponse.class
+})
+public class ErrorResponse
+    extends StatusResponse
 {
 
     @XmlElement(required = true)
-    protected String id;
+    protected String error;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the error property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getError() {
+        return error;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the error property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setError(String value) {
+        this.error = value;
     }
 
 }

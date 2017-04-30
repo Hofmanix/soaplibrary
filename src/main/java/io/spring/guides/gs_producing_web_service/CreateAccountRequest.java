@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="account" type="{http://spring.io/guides/gs-producing-web-service}account"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -36,38 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "account"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest
-    extends AuthenticatedRequest
-{
+@XmlRootElement(name = "createAccountRequest")
+public class CreateAccountRequest {
 
     @XmlElement(required = true)
-    protected String id;
+    protected Account account;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the account property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Account }
      *     
      */
-    public String getId() {
-        return id;
+    public Account getAccount() {
+        return account;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the account property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Account }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setAccount(Account value) {
+        this.account = value;
     }
 
 }

@@ -8,6 +8,8 @@
 
 package io.spring.guides.gs_producing_web_service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="book" type="{http://spring.io/guides/gs-producing-web-service}book"/>
+ *         &lt;element name="books" type="{http://spring.io/guides/gs-producing-web-service}book" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,15 +40,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "status",
-    "book"
+    "books"
 })
-@XmlRootElement(name = "getBookResponse")
-public class GetBookResponse {
+@XmlRootElement(name = "getBooksResponse")
+public class GetBooksResponse {
 
     @XmlElement(required = true)
     protected String status;
-    @XmlElement(required = true)
-    protected Book book;
+    protected List<Book> books;
 
     /**
      * Gets the value of the status property.
@@ -73,27 +74,32 @@ public class GetBookResponse {
     }
 
     /**
-     * Gets the value of the book property.
+     * Gets the value of the books property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Book }
-     *     
-     */
-    public Book getBook() {
-        return book;
-    }
-
-    /**
-     * Sets the value of the book property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the books property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Book }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getBooks().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Book }
+     * 
+     * 
      */
-    public void setBook(Book value) {
-        this.book = value;
+    public List<Book> getBooks() {
+        if (books == null) {
+            books = new ArrayList<Book>();
+        }
+        return this.books;
     }
 
 }
