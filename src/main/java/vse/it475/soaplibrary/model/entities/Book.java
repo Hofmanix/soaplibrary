@@ -18,9 +18,9 @@ public class Book {
     private String location;
     private String[] keywords;
     private String authorId;
-    private List<String> coAuthorId;
     private List<BookCopy> copies;
-    private List<Reader> requests;
+    private List<BookingBook> bookings;
+
 
     public String getId() {
         return id;
@@ -50,9 +50,6 @@ public class Book {
         this.authorId = authorId;
     }
 
-    public List<String> getCoAuthorId () { return coAuthorId; }
-
-    public void setCoAuthorId( List<String> coAuthorId ) { this.coAuthorId = coAuthorId; }
 
     public List<BookCopy> getCopies() {
         return copies;
@@ -78,7 +75,12 @@ public class Book {
 
     public void setKeywords(String[] keywords) { this.keywords = keywords; }
 
-    public List<Reader> getRequests() { return requests; }
 
-    public void setRequests(List<Reader> requests) { this.requests = requests; }
+    public List<BookingBook> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<BookingBook> bookings) {
+        this.bookings = bookings;
+    }
 }
