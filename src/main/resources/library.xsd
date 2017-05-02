@@ -3,7 +3,7 @@
     <xs:element name="createAccountRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="account" type="tns:account"/>
+                <xs:element name="account" type="tns:accountRequest"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -16,7 +16,7 @@
 
     <xs:complexType name="statusResponse">
         <xs:sequence>
-            <xs:element name="status" type="xs:string"/>
+            <xs:element name="status" type="xs:string" default="ok"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -24,7 +24,7 @@
             <xs:complexContent>
                 <xs:extension base="tns:statusResponse">
                     <xs:sequence>
-                        <xs:element name="error" type="xs:string"/>
+                        <xs:element name="error" type="xs:string" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -34,7 +34,7 @@
             <xs:complexContent>
                 <xs:extension base="tns:errorResponse">
                     <xs:sequence>
-                        <xs:element name="id" type="xs:string"/>
+                        <xs:element name="id" type="xs:string" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -51,64 +51,68 @@
 
     <xs:element name="loginResponse">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="token" type="xs:string"/>
-                <xs:element name="account" type="tns:accountResponse"/>
-            </xs:sequence>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="token" type="xs:string" minOccurs="0"/>
+                        <xs:element name="account" type="tns:accountResponse" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="getAuthorsResponse">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="authors" type="tns:author" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
+            <xs:complexContent>
+                <xs:extension base="tns:statusResponse">
+                    <xs:sequence>
+                        <xs:element name="authors" type="tns:authorResponse" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="getBooksRequest">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="tns:authenticatedRequest">
-                    <xs:sequence>
-                        <xs:element name="authorsId" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-                        <xs:element name="available" type="xs:boolean"/>
-                        <xs:element name="bookName" type="xs:string"/>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:sequence>
+                <xs:element name="authorsId" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="available" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="bookName" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="getBooksResponse">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="books" type="tns:book" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="getBookRequest">
-        <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="tns:authenticatedRequest">
+                <xs:extension base="tns:statusResponse">
                     <xs:sequence>
-                        <xs:element name="id" type="xs:string"/>
+                        <xs:element name="books" type="tns:bookResponse" minOccurs="0" maxOccurs="unbounded"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="getBookRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     
     <xs:element name="getBookResponse">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="book" type="tns:book"/>
-            </xs:sequence>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="book" type="tns:bookResponse" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
@@ -169,7 +173,7 @@
             <xs:complexContent>
                 <xs:extension base="tns:authenticatedRequest">
                     <xs:sequence>
-                        <xs:element name="book" type="tns:book"/>
+                        <xs:element name="book" type="tns:bookResponse"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -200,23 +204,23 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="book">
+    <xs:complexType name="bookResponse">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="author" type="tns:author"/>
+            <xs:element name="author" type="tns:authorResponse"/>
             <xs:element name="available" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="author">
+    <xs:complexType name="authorResponse">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="account">
+    <xs:complexType name="accountRequest">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
