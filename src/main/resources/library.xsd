@@ -8,6 +8,14 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="editAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="account" type="tns:accountRequest"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:complexType name="authenticatedRequest">
         <xs:sequence>
             <xs:element name="token" type="xs:string"/>
@@ -60,6 +68,9 @@
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAuthorsRequest">
     </xs:element>
 
     <xs:element name="getAuthorsResponse">

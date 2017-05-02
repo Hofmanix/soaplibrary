@@ -27,7 +27,7 @@ public class BookEndpoint {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBooks")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBooksRequest")
     @ResponsePayload
     public GetBooksResponse getBooks(@RequestPayload GetBooksRequest request) {
         GetBooksResponse response = new GetBooksResponse();
@@ -48,7 +48,7 @@ public class BookEndpoint {
         return response;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBook")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBookRequest")
     @ResponsePayload
     public GetBookResponse getBook(@RequestPayload GetBookRequest request) {
         Book book = bookRepository.findOne(request.getId());
@@ -63,7 +63,7 @@ public class BookEndpoint {
         return response;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "borrowBook")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "borrowBookRequest")
     @ResponsePayload
     public ErrorResponse borrowBook(@RequestPayload BorrowBookRequest request) {
         throw new NotImplementedException();
@@ -75,7 +75,7 @@ public class BookEndpoint {
         throw new NotImplementedException();
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "bookBook")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "bookBookRequest")
     @ResponsePayload
     public ErrorResponse bookBook(@RequestPayload BookBookRequest request) {
         throw new NotImplementedException();
@@ -87,13 +87,14 @@ public class BookEndpoint {
         throw new NotImplementedException();
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBook")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBookRequest")
     @ResponsePayload
     public ErrorResponse addBook(@RequestPayload AddBookRequest request) {
-        Book book = new Book();
+        //Book book = new Book();
+        throw new NotImplementedException();
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeBook")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeBookRequest")
     @ResponsePayload
     public ErrorResponse removeBook(@RequestPayload RemoveBookRequest request) {
         throw new NotImplementedException();

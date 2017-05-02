@@ -23,7 +23,7 @@ public class AuthorEndpoint {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAuthors")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAuthorsRequest")
     @ResponsePayload
     public GetAuthorsResponse getAuthors() {
         GetAuthorsResponse response = new GetAuthorsResponse();

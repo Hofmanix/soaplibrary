@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="book" type="{http://spring.io/guides/gs-producing-web-service}bookResponse"/>
+ *         &lt;element name="account" type="{http://spring.io/guides/gs-producing-web-service}accountRequest"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -36,38 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "book"
+    "account"
 })
-@XmlRootElement(name = "addBookRequest")
-public class AddBookRequest
-    extends AuthenticatedRequest
-{
+@XmlRootElement(name = "editAccountRequest")
+public class EditAccountRequest {
 
     @XmlElement(required = true)
-    protected BookResponse book;
+    protected AccountRequest account;
 
     /**
-     * Gets the value of the book property.
+     * Gets the value of the account property.
      * 
      * @return
      *     possible object is
-     *     {@link BookResponse }
+     *     {@link AccountRequest }
      *     
      */
-    public BookResponse getBook() {
-        return book;
+    public AccountRequest getAccount() {
+        return account;
     }
 
     /**
-     * Sets the value of the book property.
+     * Sets the value of the account property.
      * 
      * @param value
      *     allowed object is
-     *     {@link BookResponse }
+     *     {@link AccountRequest }
      *     
      */
-    public void setBook(BookResponse value) {
-        this.book = value;
+    public void setAccount(AccountRequest value) {
+        this.account = value;
     }
 
 }
