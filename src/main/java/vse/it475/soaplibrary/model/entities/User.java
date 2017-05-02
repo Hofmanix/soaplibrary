@@ -1,5 +1,6 @@
 package vse.it475.soaplibrary.model.entities;
 
+import io.spring.guides.gs_producing_web_service.UserRole;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
@@ -14,7 +15,9 @@ public class User {
     private String surname;
     private String username;
     private String password;
+    private String email;
     private Date dateOfBirth;
+    private UserRole role;
 
     public String getId() {
         return id;
@@ -62,5 +65,17 @@ public class User {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

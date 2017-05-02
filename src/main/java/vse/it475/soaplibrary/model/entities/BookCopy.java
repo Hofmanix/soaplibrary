@@ -1,15 +1,22 @@
 package vse.it475.soaplibrary.model.entities;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
 /**
  * Created by hofmanix on 30/04/2017.
  */
 public class BookCopy {
+
+    @Id
+    private String UniqueSignature;
     private boolean borrowed;
-    private boolean borrowerId;
+    private String borrowerId;
+    private String providerId;
     private Date from;
     private Date to;
+    private Date returned;
 
     public boolean isBorrowed() {
         return borrowed;
@@ -19,11 +26,11 @@ public class BookCopy {
         this.borrowed = borrowed;
     }
 
-    public boolean isBorrowerId() {
+    public String isBorrowerId() {
         return borrowerId;
     }
 
-    public void setBorrowerId(boolean borrowerId) {
+    public void setBorrowerId(String borrowerId) {
         this.borrowerId = borrowerId;
     }
 
@@ -42,4 +49,16 @@ public class BookCopy {
     public void setTo(Date to) {
         this.to = to;
     }
+
+    public String getUniqueSignature() { return UniqueSignature; }
+
+    public void setUniqueSignature(String uniqueSignature) { UniqueSignature = uniqueSignature; }
+
+    public String getProviderId() { return providerId; }
+
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+
+    public Date getReturned() { return returned; }
+
+    public void setReturned(Date returned) { this.returned = returned; }
 }
