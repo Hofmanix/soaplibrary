@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="authorId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -36,36 +36,38 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "authorId"
 })
-@XmlRootElement(name = "getBookRequest")
-public class GetBookRequest {
+@XmlRootElement(name = "removeAuthorRequest")
+public class RemoveAuthorRequest
+    extends AuthenticatedRequest
+{
 
     @XmlElement(required = true)
-    protected String id;
+    protected String authorId;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the authorId property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getAuthorId() {
+        return authorId;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the authorId property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setAuthorId(String value) {
+        this.authorId = value;
     }
 
 }

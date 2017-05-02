@@ -1,14 +1,12 @@
 package vse.it475.soaplibrary.endpoints;
 
-import io.spring.guides.gs_producing_web_service.AuthenticatedRequest;
 import io.spring.guides.gs_producing_web_service.AuthorResponse;
 import io.spring.guides.gs_producing_web_service.GetAuthorsResponse;
+import io.spring.guides.gs_producing_web_service.IdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 
 import java.util.stream.Collectors;
@@ -37,4 +35,15 @@ public class AuthorEndpoint {
 
         return response;
     }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addAuthorRequest")
+    @ResponsePayload
+    public IdResponse addAuthor() {
+        throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
+    }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeAuthorRequest")
+    @ResponsePayload
+    public IdResponse removeAuthor() {
+        throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
+    }
+
 }
