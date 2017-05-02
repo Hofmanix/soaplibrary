@@ -178,13 +178,40 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    
+
+
+    <xs:element name="addAuthorRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="author" type="tns:authorResponse"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+
     <xs:element name="addBookRequest">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="tns:authenticatedRequest">
                     <xs:sequence>
                         <xs:element name="book" type="tns:bookResponse"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="removeAuthorRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="authorId" type="xs:string"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
