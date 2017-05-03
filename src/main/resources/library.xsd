@@ -1,20 +1,5 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
-    <xs:element name="createAccountRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="account" type="tns:accountRequest"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="editAccountRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="account" type="tns:accountRequest"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
 
     <xs:complexType name="authenticatedRequest">
         <xs:sequence>
@@ -47,6 +32,34 @@
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
+
+    <xs:element name="createAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="account" type="tns:accountRequest"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createAccountResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="account" type="tns:accountResponse"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="editAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="account" type="tns:accountRequest"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="loginRequest">
         <xs:complexType>
@@ -180,31 +193,53 @@
     </xs:element>
 
 
-    <xs:element name="addAuthorRequest">
+    <xs:element name="addAuthorsRequest">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="tns:authenticatedRequest">
                     <xs:sequence>
-                        <xs:element name="author" type="tns:authorResponse"/>
+                        <xs:element name="authors" type="tns:authorResponse" minOccurs="1" maxOccurs="unbounded"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
-
-    <xs:element name="addBookRequest">
+    <xs:element name="addAuthorsResponse">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="tns:authenticatedRequest">
+                <xs:extension base="tns:errorResponse">
                     <xs:sequence>
-                        <xs:element name="book" type="tns:bookResponse"/>
+                        <xs:element name="authorIds" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="addBooksRequest">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:authenticatedRequest">
+                    <xs:sequence>
+                        <xs:element name="books" type="tns:bookResponse" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addBooksResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="books" type="tns:bookResponse" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="removeAuthorRequest">
         <xs:complexType>
@@ -244,8 +279,13 @@
 
     <xs:complexType name="bookResponse">
         <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
+            <xs:element name="id" type="xs:string" minOccurs="0"/>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="isbn" type="xs:string"/>
+            <xs:element name="published" type="xs:date"/>
+            <xs:element name="language" type="xs:string"/>
+            <xs:element name="location" type="xs:string"/>
+            <xs:element name="keywords" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="author" type="tns:authorResponse"/>
             <xs:element name="available" type="xs:int"/>
         </xs:sequence>
@@ -253,15 +293,16 @@
     
     <xs:complexType name="authorResponse">
         <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
-            <xs:element name="name" type="xs:string"/>
+            <xs:element name="id" type="xs:string" minOccurs="0"/>
+            <xs:element name="name" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="accountRequest">
         <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
+            <xs:element name="id" type="xs:string" minOccurs="0"/>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
             <xs:element name="surname" type="xs:string"/>
             <xs:element name="username" type="xs:string"/>
             <xs:element name="password" type="xs:string"/>
@@ -273,6 +314,7 @@
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
             <xs:element name="surname" type="xs:string"/>
             <xs:element name="username" type="xs:string"/>
             <xs:element name="dateOfBirth" type="xs:date"/>

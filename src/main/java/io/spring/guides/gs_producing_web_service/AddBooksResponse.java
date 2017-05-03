@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}statusResponse">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
  *       &lt;sequence>
- *         &lt;element name="authors" type="{http://spring.io/guides/gs-producing-web-service}authorResponse" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="books" type="{http://spring.io/guides/gs-producing-web-service}bookResponse" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -37,42 +37,42 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "authors"
+    "books"
 })
-@XmlRootElement(name = "getAuthorsResponse")
-public class GetAuthorsResponse
-    extends StatusResponse
+@XmlRootElement(name = "addBooksResponse")
+public class AddBooksResponse
+    extends ErrorResponse
 {
 
-    protected List<AuthorResponse> authors;
+    protected List<BookResponse> books;
 
     /**
-     * Gets the value of the authors property.
+     * Gets the value of the books property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the authors property.
+     * This is why there is not a <CODE>set</CODE> method for the books property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getAuthors().add(newItem);
+     *    getBooks().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link AuthorResponse }
+     * {@link BookResponse }
      * 
      * 
      */
-    public List<AuthorResponse> getAuthors() {
-        if (authors == null) {
-            authors = new ArrayList<AuthorResponse>();
+    public List<BookResponse> getBooks() {
+        if (books == null) {
+            books = new ArrayList<BookResponse>();
         }
-        return this.authors;
+        return this.books;
     }
 
 }

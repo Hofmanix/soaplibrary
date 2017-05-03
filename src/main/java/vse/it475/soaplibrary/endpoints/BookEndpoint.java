@@ -1,7 +1,10 @@
 package vse.it475.soaplibrary.endpoints;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import io.spring.guides.gs_producing_web_service.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -10,9 +13,15 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import vse.it475.soaplibrary.model.entities.Author;
 import vse.it475.soaplibrary.model.entities.Book;
+import vse.it475.soaplibrary.model.entities.BookCopy;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 import vse.it475.soaplibrary.model.repositories.BookRepository;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -21,6 +30,7 @@ import java.util.stream.Collectors;
 @Endpoint
 public class BookEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookEndpoint.class);
 
     @Autowired
     private BookRepository bookRepository;
@@ -32,17 +42,21 @@ public class BookEndpoint {
     public GetBooksResponse getBooks(@RequestPayload GetBooksRequest request) {
         GetBooksResponse response = new GetBooksResponse();
         response.getBooks().addAll(bookRepository.findAll().stream().filter(book -> {
-            if (request.getAuthorsId().size() > 0) {
+            LOGGER.info(book.getName());
+            if (request.getAuthorsId() != null && request.getAuthorsId().size() > 0) {
                 if (!request.getAuthorsId().contains(book.getAuthorId())) {
+                    LOGGER.info("Authors not in.");
+                    LOGGER.info(request.getAuthorsId().get(0) + "");
                     return false;
                 }
             }
-            if (request.getBookName() != null && !request.getBookName().trim().equals("")) {
+            if (book.getName() != null && request.getBookName() != null && !request.getBookName().trim().equals("")) {
                 if (!StringUtils.containsIgnoreCase(book.getName(), request.getBookName())) {
+                    LOGGER.info("Name not in");
                     return false;
                 }
             }
-            return !request.isAvailable() || book.getCopies().stream().anyMatch(copy -> !copy.isBorrowed());
+            return request.isAvailable() == null || !request.isAvailable() || book.getCopies().stream().anyMatch(copy -> !copy.isBorrowed());
 
         }).map(this::convertToBookResponse).collect(Collectors.toList()));
         return response;
@@ -87,11 +101,43 @@ public class BookEndpoint {
         throw new NotImplementedException();
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBookRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBooksRequest")
     @ResponsePayload
-    public ErrorResponse addBook(@RequestPayload AddBookRequest request) {
-        //Book book = new Book();
-        throw new NotImplementedException();
+    public AddBooksResponse addBooks(@RequestPayload AddBooksRequest request) {
+        List<Book> books = bookRepository.save(request.getBooks().stream().filter(book -> {
+            if(!authorRepository.exists(book.getAuthor().getId())) {
+                return false;
+            }
+            if(book.getName() == null || book.getName().trim().equals("") || bookRepository.findByAuthorId(book.getAuthor().getId()).stream().map(Book::getName).anyMatch(name -> name != null && name.equalsIgnoreCase(book.getName()))) {
+                return false;
+            }
+            if(book.getPublished() == null) {
+                return false;
+            }
+
+            return true;
+        }).map(bookResponse -> {
+            Book book = new Book();
+            book.setAuthorId(bookResponse.getAuthor().getId());
+            book.setName(bookResponse.getName());
+            book.setIsbn(bookResponse.getIsbn());
+            book.setKeywords(bookResponse.getKeywords());
+            book.setLanguage(bookResponse.getLanguage());
+            book.setLocation(bookResponse.getLocation());
+            book.setPublished(bookResponse.getPublished().toGregorianCalendar().getTime());
+            List<BookCopy> copies = new ArrayList<>();
+            for(int i = 0; i < bookResponse.getAvailable(); i++) {
+                copies.add(new BookCopy());
+            }
+            book.setCopies(copies);
+
+            return book;
+        }).collect(Collectors.toList()));
+
+        AddBooksResponse addBooksResponse = new AddBooksResponse();
+        addBooksResponse.setStatus("ok");
+        addBooksResponse.getBooks().addAll(books.stream().map(this::convertToBookResponse).collect(Collectors.toList()));
+        return addBooksResponse;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeBookRequest")
@@ -111,6 +157,17 @@ public class BookEndpoint {
 
         bookResponse.setAuthor(authorResponse);
         bookResponse.setAvailable((int)book.getCopies().stream().filter(copy -> !copy.isBorrowed()).count());
+        bookResponse.setIsbn(book.getIsbn());
+        bookResponse.setLanguage(book.getLanguage());
+        bookResponse.setLocation(book.getLocation());
+        bookResponse.setName(book.getName());
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(book.getPublished());
+        try {
+            bookResponse.setPublished(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
+        } catch (DatatypeConfigurationException ex) {
+            bookResponse.setPublished(null);
+        }
 
         return bookResponse;
     }

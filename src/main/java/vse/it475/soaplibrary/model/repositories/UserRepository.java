@@ -7,4 +7,6 @@ import vse.it475.soaplibrary.model.entities.User;
  * Created by hofmanix on 30/04/2017.
  */
 public interface UserRepository extends MongoRepository<User, String> {
+    User findByUsername(String username);
+    User findByEmail(String email);
 }

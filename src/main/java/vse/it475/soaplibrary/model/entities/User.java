@@ -4,6 +4,7 @@ import io.spring.guides.gs_producing_web_service.UserRole;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by hofmanix on 30/04/2017.
@@ -18,6 +19,7 @@ public class User {
     private String email;
     private Date dateOfBirth;
     private UserRole role;
+    private List<String> tokens;
 
     public String getId() {
         return id;
@@ -77,5 +79,13 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<String> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<String> tokens) {
+        this.tokens = tokens;
     }
 }

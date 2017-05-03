@@ -16,7 +16,7 @@ public class Book {
     private Date published;
     private String language;
     private String location;
-    private String[] keywords;
+    private List<String> keywords;
     private String authorId;
     private List<BookCopy> copies;
     private List<BookingBook> bookings;
@@ -59,9 +59,9 @@ public class Book {
         this.copies = copies;
     }
 
-    public String getIsin() { return isbn; }
+    public String getIsbn() { return isbn; }
 
-    public void setIsin(String isbn) { this.isbn = isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
 
     public String getLanguage() { return language; }
 
@@ -71,9 +71,9 @@ public class Book {
 
     public void setLocation(String location) { this.location = location; }
 
-    public String[] getKeywords() { return keywords; }
+    public List<String> getKeywords() { return keywords; }
 
-    public void setKeywords(String[] keywords) { this.keywords = keywords; }
+    public void setKeywords(List<String> keywords) { this.keywords = keywords; }
 
 
     public List<BookingBook> getBookings() {
