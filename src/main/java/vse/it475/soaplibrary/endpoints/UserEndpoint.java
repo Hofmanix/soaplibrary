@@ -72,8 +72,22 @@ public class UserEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "editAccountRequest")
     @ResponsePayload
-    public ErrorResponse editAccount(@RequestPayload EditAccountRequest request) {
-        throw new NotImplementedException();
+    public EditAccountResponse editAccount(@RequestPayload EditAccountRequest request) {
+        EditAccountResponse response = new EditAccountResponse();
+        AccountRequest accounteditRequest = request.getAccount();
+        User user = new User();
+        user.setEmail(accounteditRequest.getEmail());
+        user.setDateOfBirth(accounteditRequest.getDateOfBirth().toGregorianCalendar().getTime());
+        user.setName(accounteditRequest.getName());
+        user.setPassword(BCrypt.hashpw(accounteditRequest.getPassword(), BCrypt.gensalt()));
+        user.setRole(UserRole.USER);
+        user.setSurname(accounteditRequest.getSurname());
+        user.setUsername(accounteditRequest.getUsername());
+        userRepository.save(user);
+
+        response.setStatus("ok");
+        response.setAccount(toAccountResponse(user));
+        return response;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "loginRequest")

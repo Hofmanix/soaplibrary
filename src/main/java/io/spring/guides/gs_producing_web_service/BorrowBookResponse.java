@@ -10,21 +10,21 @@ package io.spring.guides.gs_producing_web_service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for errorResponse complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="errorResponse">
+ * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}statusResponse">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
  *       &lt;sequence>
- *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="borrowBook" type="{http://spring.io/guides/gs-producing-web-service}bookResponse" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -34,48 +34,38 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "errorResponse", propOrder = {
-    "error"
+@XmlType(name = "", propOrder = {
+    "borrowBook"
 })
-@XmlSeeAlso({
-    IdResponse.class,
-    AddBooksResponse.class,
-    ReturnBookResponse.class,
-    AddAuthorsResponse.class,
-    EditAccountResponse.class,
-    BorrowBookResponse.class,
-    LoginResponse.class,
-    GetBookResponse.class,
-    CreateAccountResponse.class
-})
-public class ErrorResponse
-    extends StatusResponse
+@XmlRootElement(name = "borrowBookResponse")
+public class BorrowBookResponse
+    extends ErrorResponse
 {
 
-    protected String error;
+    protected BookResponse borrowBook;
 
     /**
-     * Gets the value of the error property.
+     * Gets the value of the borrowBook property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link BookResponse }
      *     
      */
-    public String getError() {
-        return error;
+    public BookResponse getBorrowBook() {
+        return borrowBook;
     }
 
     /**
-     * Sets the value of the error property.
+     * Sets the value of the borrowBook property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link BookResponse }
      *     
      */
-    public void setError(String value) {
-        this.error = value;
+    public void setBorrowBook(BookResponse value) {
+        this.borrowBook = value;
     }
 
 }

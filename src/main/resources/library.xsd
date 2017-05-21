@@ -61,6 +61,18 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="editAccountResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="account" type="tns:accountResponse" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="loginRequest">
         <xs:complexType>
             <xs:sequence>
@@ -154,12 +166,38 @@
         </xs:complexType>
     </xs:element>
 
+
+    <xs:element name="borrowBookResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="borrowBook" type="tns:bookResponse" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+
     <xs:element name="returnBookRequest">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="tns:authenticatedRequest">
                     <xs:sequence>
                         <xs:element name="bookId" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="returnBookResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                        <xs:element name="returnBook" type="tns:bookResponse" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>

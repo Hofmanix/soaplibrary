@@ -19,7 +19,7 @@ public class User {
     private String email;
     private Date dateOfBirth;
     private UserRole role;
-    private List<String> tokens;
+    private List<Book> tokens;
 
     public String getId() {
         return id;
@@ -81,11 +81,11 @@ public class User {
         this.role = role;
     }
 
-    public List<String> getTokens() {
+    public List<Book> getTokens() {
         return tokens;
     }
 
-    public void setTokens(List<String> tokens) {
+    public void setTokens(List<Book> tokens) {
         this.tokens = tokens;
     }
 }

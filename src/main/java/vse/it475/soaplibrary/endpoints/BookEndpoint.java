@@ -1,6 +1,5 @@
 package vse.it475.soaplibrary.endpoints;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import io.spring.guides.gs_producing_web_service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,12 +13,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import vse.it475.soaplibrary.model.entities.Author;
 import vse.it475.soaplibrary.model.entities.Book;
 import vse.it475.soaplibrary.model.entities.BookCopy;
+import vse.it475.soaplibrary.model.entities.BookingBook;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 import vse.it475.soaplibrary.model.repositories.BookRepository;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,16 +80,29 @@ public class BookEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "borrowBookRequest")
     @ResponsePayload
-    public ErrorResponse borrowBook(@RequestPayload BorrowBookRequest request) {
-        throw new NotImplementedException();
-    }
+    public BorrowBookResponse borrowBook(@RequestPayload BorrowBookRequest request) {
+        BorrowBookResponse response = new BorrowBookResponse();
+        BookingBook requestedBook = bookRepository.findOne(request.getBookId();
+        if (requestedBook == null ){
+            response.setStatus("ok");
+        } else {
+            response.setStatus("err");
+            response.setError("This book is already reserved.");
+        }
 
+       return response;
+
+    }
+/*
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "returnBook")
     @ResponsePayload
-    public ErrorResponse returnBook(@RequestPayload ReturnBookRequest request) {
-        throw new NotImplementedException();
-    }
+    public ReturnBookResponse returnBook(@RequestPayload ReturnBookRequest request) {
+        ReturnBookResponse response = new ReturnBookResponse;
+        BookCopy returnBook = bookRepository.findOne(request.getBookId();
 
+        response.setReturnBook();
+    }
+*/
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "bookBookRequest")
     @ResponsePayload
     public ErrorResponse bookBook(@RequestPayload BookBookRequest request) {
@@ -171,4 +185,6 @@ public class BookEndpoint {
 
         return bookResponse;
     }
+
+    private BorrowBookResponse
 }
