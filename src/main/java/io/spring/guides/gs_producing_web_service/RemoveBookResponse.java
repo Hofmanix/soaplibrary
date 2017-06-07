@@ -10,7 +10,6 @@ package io.spring.guides.gs_producing_web_service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -23,9 +22,8 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
  *       &lt;sequence>
- *         &lt;element name="userRole" type="{http://spring.io/guides/gs-producing-web-service}userRole"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -35,39 +33,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "userRole"
-})
-@XmlRootElement(name = "setUserRoleRequest")
-public class SetUserRoleRequest
-    extends AuthenticatedRequest
+@XmlType(name = "")
+@XmlRootElement(name = "removeBookResponse")
+public class RemoveBookResponse
+    extends ErrorResponse
 {
 
-    @XmlElement(required = true)
-    protected UserRole userRole;
-
-    /**
-     * Gets the value of the userRole property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UserRole }
-     *     
-     */
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    /**
-     * Sets the value of the userRole property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UserRole }
-     *     
-     */
-    public void setUserRole(UserRole value) {
-        this.userRole = value;
-    }
 
 }

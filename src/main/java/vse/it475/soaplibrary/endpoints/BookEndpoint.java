@@ -9,7 +9,6 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import vse.it475.soaplibrary.model.entities.*;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 import vse.it475.soaplibrary.model.repositories.BookRepository;
@@ -234,9 +233,19 @@ public class BookEndpoint extends BaseEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeBookRequest")
     @ResponsePayload
-    public ErrorResponse removeBook(@RequestPayload RemoveBookRequest request) {
-        throw new NotImplementedException();
+    public RemoveBookResponse removeBook(@RequestPayload RemoveBookRequest request) {
+        Book book = bookRepository.findOne(request.getBookId());
+        RemoveBookResponse removeBookResponse = new RemoveBookResponse();
+        if (book == null){
+            removeBookResponse.setError("err");
+            removeBookResponse.setStatus("No book found");
+        } else {
+            bookRepository.delete(book);
+            removeBookResponse.setStatus("ok");
+        }
+        return removeBookResponse;
     }
+
 
     private BookResponse convertToBookResponse(Book book) {
         BookResponse bookResponse = new BookResponse();

@@ -316,12 +316,35 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="removeAuthorResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+
     <xs:element name="removeBookRequest">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="tns:authenticatedRequest">
                     <xs:sequence>
                         <xs:element name="bookId" type="xs:string"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="removeBookResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="tns:errorResponse">
+                    <xs:sequence>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
