@@ -83,19 +83,24 @@ public class BookEndpoint extends BaseEndpoint {
             return response;
         }
         Book requestedBook = bookRepository.findOne(request.getBookId());
-        Optional<BookCopy> copy = requestedBook.getCopies().stream().filter(bookCopy -> !bookCopy.isBorrowed()).findFirst();
-        if(copy.isPresent()) {
-            BookCopy bookCopy = copy.get();
-            bookCopy.setBorrowed(true);
-            bookCopy.setBorrowerId(user.getId());
-            bookRepository.save(requestedBook);
-            response.setStatus("ok");
-        } else {
-
+        List<BookCopy> copies = requestedBook.getCopies().stream().filter(bookCopy -> !bookCopy.isBorrowed()).collect(Collectors.toList());
+        Date borrowFrom = new Date(request.getBeginDate().getMillisecond());
+        Date borrowTo = new Date(request.getEndDate().getMillisecond());
+        List<BookingBook> bookings = requestedBook.getBookings().stream().filter(bookingBook -> bookingBook.getBookFrom().getTime() < borrowTo.getTime()).collect(Collectors.toList());
+        if(copies.size() <= bookings.size()) {
             response.setStatus("err");
-            response.setError("This book is already reserved.");
+            response.setStatus("No books are available.");
+            return response;
         }
-       return response;
+
+        BookCopy bookCopy = copies.get(0);
+        bookCopy.setBorrowed(true);
+        bookCopy.setBorrowerId(user.getId());
+        bookCopy.setFrom(borrowFrom);
+        bookCopy.setTo(borrowTo);
+        bookRepository.save(requestedBook);
+        response.setStatus("ok");
+        return response;
 
     }
 
@@ -133,12 +138,30 @@ public class BookEndpoint extends BaseEndpoint {
         if(user == null) {
             bookBookResponse.setStatus("err");
             bookBookResponse.setError("User not logged in");
-            return  bookBookResponse;
+            return bookBookResponse;
         }
         Book book = bookRepository.findOne(request.getBookId());
+        List<BookCopy> copies = book.getCopies().stream().filter(bookCopy -> bookCopy.isBorrowed() && bookCopy.getTo().getTime() > request.getBeginDate().getMillisecond()).collect(Collectors.toList());
+        List<BookingBook> bookingBooks = book.getBookings().stream().filter(bookingBook ->
+                (bookingBook.getBookFrom().getTime() < request.getBeginDate().getMillisecond() &&
+                 bookingBook.getBookTo().getTime() > request.getBeginDate().getMillisecond()   &&
+                 bookingBook.getBookTo().getTime() < request.getEndDate().getMillisecond()) ||
+                (bookingBook.getBookFrom().getTime() > request.getBeginDate().getMillisecond() &&
+                 bookingBook.getBookTo().getTime() < request.getEndDate().getMillisecond()) ||
+                (bookingBook.getBookFrom().getTime() < request.getBeginDate().getMillisecond() &&
+                 bookingBook.getBookTo().getTime() > request.getEndDate().getMillisecond()) ||
+                (bookingBook.getBookFrom().getTime() > request.getBeginDate().getMillisecond() &&
+                 bookingBook.getBookFrom().getTime() < request.getEndDate().getMillisecond()   &&
+                 bookingBook.getBookTo().getTime() > request.getEndDate().getMillisecond())).collect(Collectors.toList());
+        if (copies.size() <= bookingBooks.size()){
+            bookBookResponse.setStatus("err");
+            bookBookResponse.setError("No book for reservation");
+            return bookBookResponse;
+        }
+
         BookingBook bookingBook = new BookingBook();
         bookingBook.setBookFrom(new Date(request.getBeginDate().getMillisecond()));
-        bookingBook.setBookTo(new Date(request.getBeginDate().getMillisecond()));
+        bookingBook.setBookTo(new Date(request.getEndDate().getMillisecond()));
         bookingBook.setBookerId(user.getId());
         book.getBookings().add(bookingBook);
         bookRepository.save(book);

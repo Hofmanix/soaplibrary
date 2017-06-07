@@ -82,7 +82,7 @@ public class UserEndpoint extends BaseEndpoint {
             response.setError("User not logged in");
             return response;
         }
-        
+
         user.setEmail(accounteditRequest.getEmail());
         user.setDateOfBirth(accounteditRequest.getDateOfBirth().toGregorianCalendar().getTime());
         user.setName(accounteditRequest.getName());
