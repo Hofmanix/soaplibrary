@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Created by hofmanix on 30/04/2017.
  */
 @Endpoint
-public class AuthorEndpoint {
+public class AuthorEndpoint extends BaseEndpoint {
 
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     @Autowired

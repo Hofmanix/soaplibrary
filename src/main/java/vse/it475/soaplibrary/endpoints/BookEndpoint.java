@@ -10,26 +10,20 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import vse.it475.soaplibrary.model.entities.Author;
-import vse.it475.soaplibrary.model.entities.Book;
-import vse.it475.soaplibrary.model.entities.BookCopy;
-import vse.it475.soaplibrary.model.entities.BookingBook;
+import vse.it475.soaplibrary.model.entities.*;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 import vse.it475.soaplibrary.model.repositories.BookRepository;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by hofmanix on 29/04/2017.
  */
 @Endpoint
-public class BookEndpoint {
+public class BookEndpoint extends BaseEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     private static final Logger LOGGER = LoggerFactory.getLogger(BookEndpoint.class);
 
@@ -82,38 +76,99 @@ public class BookEndpoint {
     @ResponsePayload
     public BorrowBookResponse borrowBook(@RequestPayload BorrowBookRequest request) {
         BorrowBookResponse response = new BorrowBookResponse();
-        BookingBook requestedBook = bookRepository.findOne(request.getBookId();
-        if (requestedBook == null ){
+        User user = checkToken(request.getToken());
+        if(user == null) {
+            response.setStatus("err");
+            response.setError("User not logged in");
+            return response;
+        }
+        Book requestedBook = bookRepository.findOne(request.getBookId());
+        Optional<BookCopy> copy = requestedBook.getCopies().stream().filter(bookCopy -> !bookCopy.isBorrowed()).findFirst();
+        if(copy.isPresent()) {
+            BookCopy bookCopy = copy.get();
+            bookCopy.setBorrowed(true);
+            bookCopy.setBorrowerId(user.getId());
+            bookRepository.save(requestedBook);
             response.setStatus("ok");
         } else {
+
             response.setStatus("err");
             response.setError("This book is already reserved.");
         }
-
        return response;
 
     }
-/*
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "returnBook")
     @ResponsePayload
     public ReturnBookResponse returnBook(@RequestPayload ReturnBookRequest request) {
-        ReturnBookResponse response = new ReturnBookResponse;
-        BookCopy returnBook = bookRepository.findOne(request.getBookId();
-
-        response.setReturnBook();
+        ReturnBookResponse response = new ReturnBookResponse();
+        User user = checkToken(request.getToken());
+        if(user == null) {
+            response.setStatus("err");
+            response.setError("User not logged in");
+            return response;
+        }
+        Book returnBook = bookRepository.findOne(request.getBookId());
+        Optional<BookCopy> copy = returnBook.getCopies().stream().filter(bookCopy -> bookCopy.isBorrowed() && bookCopy.getBorrowerId().equals(user.getId())).findFirst();
+        if (copy.isPresent()){
+            BookCopy bookCopy = copy.get();
+            bookCopy.setBorrowed(false);
+            bookCopy.setBorrowerId(null);
+            bookRepository.save(returnBook);
+            response.setStatus("ok");
+        }
+        else {
+            response.setStatus("err");
+            response.setError("It's not possible to return");
+        }
+        return response;
     }
-*/
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "bookBookRequest")
     @ResponsePayload
-    public ErrorResponse bookBook(@RequestPayload BookBookRequest request) {
-        throw new NotImplementedException();
+    public BookBookResponse bookBook(@RequestPayload BookBookRequest request) {
+        BookBookResponse bookBookResponse = new BookBookResponse();
+        User user = checkToken(request.getToken());
+        if(user == null) {
+            bookBookResponse.setStatus("err");
+            bookBookResponse.setError("User not logged in");
+            return  bookBookResponse;
+        }
+        Book book = bookRepository.findOne(request.getBookId());
+        BookingBook bookingBook = new BookingBook();
+        bookingBook.setBookFrom(new Date(request.getBeginDate().getMillisecond()));
+        bookingBook.setBookTo(new Date(request.getBeginDate().getMillisecond()));
+        bookingBook.setBookerId(user.getId());
+        book.getBookings().add(bookingBook);
+        bookRepository.save(book);
+        bookBookResponse.setStatus("ok");
+        return bookBookResponse;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "cancelBooking")
     @ResponsePayload
-    public ErrorResponse cancelBooking(@RequestPayload CancelBookingRequest request) {
-        throw new NotImplementedException();
+    public CancelBookingResponse cancelBooking(@RequestPayload CancelBookingRequest request) {
+        CancelBookingResponse cancelBookingResponse = new CancelBookingResponse();
+        User user = checkToken(request.getToken());
+        if(user == null) {
+            cancelBookingResponse.setStatus("err");
+            cancelBookingResponse.setError("User not logged in");
+            return  cancelBookingResponse;
+        }
+        Book book = bookRepository.findOne(request.getBookId());
+        Optional<BookingBook> bookingBook = book.getBookings().stream().filter(bookingBook1 -> bookingBook1.getBookerId().equals(user.getId())).findFirst();
+        if (bookingBook.isPresent()) {
+            book.getBookings().remove(bookingBook.get());
+            bookRepository.save(book);
+            cancelBookingResponse.setStatus("ok");
+        } else {
+            cancelBookingResponse.setStatus("err");
+            cancelBookingResponse.setError("No book is booked");
+        }
+        return cancelBookingResponse;
     }
+
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBooksRequest")
     @ResponsePayload
@@ -185,6 +240,4 @@ public class BookEndpoint {
 
         return bookResponse;
     }
-
-    private BorrowBookResponse
 }

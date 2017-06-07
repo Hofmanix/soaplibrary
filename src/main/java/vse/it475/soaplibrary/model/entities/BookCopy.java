@@ -16,7 +16,6 @@ public class BookCopy {
     private String providerId;
     private Date from;
     private Date to;
-    private Date returned;
 
 
     public boolean isBorrowed() {
@@ -27,7 +26,7 @@ public class BookCopy {
         this.borrowed = borrowed;
     }
 
-    public String isBorrowerId() {
+    public String getBorrowerId() {
         return borrowerId;
     }
 
@@ -59,7 +58,4 @@ public class BookCopy {
 
     public void setProviderId(String providerId) { this.providerId = providerId; }
 
-    public Date getReturned() { return returned; }
-
-    public void setReturned(Date returned) { this.returned = returned; }
 }

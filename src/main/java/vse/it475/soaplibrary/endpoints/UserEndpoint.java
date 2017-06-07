@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
  * Created by hofmanix on 30/04/2017.
  */
 @Endpoint
-public class UserEndpoint {
+public class UserEndpoint extends BaseEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 
     @Autowired
@@ -75,7 +75,14 @@ public class UserEndpoint {
     public EditAccountResponse editAccount(@RequestPayload EditAccountRequest request) {
         EditAccountResponse response = new EditAccountResponse();
         AccountRequest accounteditRequest = request.getAccount();
-        User user = new User();
+
+        User user = checkToken(request.getToken());
+        if(user == null) {
+            response.setStatus("err");
+            response.setError("User not logged in");
+            return response;
+        }
+        
         user.setEmail(accounteditRequest.getEmail());
         user.setDateOfBirth(accounteditRequest.getDateOfBirth().toGregorianCalendar().getTime());
         user.setName(accounteditRequest.getName());

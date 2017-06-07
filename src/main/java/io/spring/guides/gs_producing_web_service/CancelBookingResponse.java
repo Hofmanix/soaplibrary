@@ -10,7 +10,6 @@ package io.spring.guides.gs_producing_web_service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -23,9 +22,8 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
  *       &lt;sequence>
- *         &lt;element name="authorId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -35,39 +33,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "authorId"
-})
-@XmlRootElement(name = "removeAuthorRequest")
-public class RemoveAuthorRequest
-    extends AuthenticatedRequest
+@XmlType(name = "")
+@XmlRootElement(name = "cancelBookingResponse")
+public class CancelBookingResponse
+    extends ErrorResponse
 {
 
-    @XmlElement(required = true)
-    protected String authorId;
-
-    /**
-     * Gets the value of the authorId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAuthorId() {
-        return authorId;
-    }
-
-    /**
-     * Sets the value of the authorId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAuthorId(String value) {
-        this.authorId = value;
-    }
 
 }
