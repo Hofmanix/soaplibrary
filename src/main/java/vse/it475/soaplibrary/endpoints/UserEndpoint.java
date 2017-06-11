@@ -28,6 +28,11 @@ public class UserEndpoint extends BaseEndpoint {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Method for creating new user account
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createAccountRequest")
     @ResponsePayload
     public CreateAccountResponse createAccount(@RequestPayload CreateAccountRequest request) {
@@ -70,6 +75,11 @@ public class UserEndpoint extends BaseEndpoint {
         }
     }
 
+    /**
+     * Method for account editation, has to be own account or user has to be administrator
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "editAccountRequest")
     @ResponsePayload
     public EditAccountResponse editAccount(@RequestPayload EditAccountRequest request) {
@@ -82,21 +92,46 @@ public class UserEndpoint extends BaseEndpoint {
             response.setError("User not logged in");
             return response;
         }
+        if(user.getId() != null && !user.getId().equals(accounteditRequest.getId()) && user.getRole() != UserRole.ADMINISTRATOR) {
+            response.setStatus("err");
+            response.setError("You can edit only your account");
+            return response;
+        }
 
-        user.setEmail(accounteditRequest.getEmail());
-        user.setDateOfBirth(accounteditRequest.getDateOfBirth().toGregorianCalendar().getTime());
-        user.setName(accounteditRequest.getName());
-        user.setPassword(BCrypt.hashpw(accounteditRequest.getPassword(), BCrypt.gensalt()));
-        user.setRole(UserRole.USER);
-        user.setSurname(accounteditRequest.getSurname());
-        user.setUsername(accounteditRequest.getUsername());
-        userRepository.save(user);
+        if(accounteditRequest.getDateOfBirth() != null && accounteditRequest.getDateOfBirth().isValid() &&
+                accounteditRequest.getEmail() != null && !accounteditRequest.getEmail().trim().isEmpty() &&
+                accounteditRequest.getName() != null && !accounteditRequest.getName().trim().isEmpty() &&
+                accounteditRequest.getPassword() != null && !accounteditRequest.getPassword().trim().isEmpty() &&
+                accounteditRequest.getSurname() != null && !accounteditRequest.getSurname().trim().isEmpty() &&
+                accounteditRequest.getUsername() != null && !accounteditRequest.getUsername().trim().isEmpty()) {
+            if (!user.getId().equals(accounteditRequest.getId())) {
+                user = userRepository.findOne(accounteditRequest.getId());
+            }
 
-        response.setStatus("ok");
-        response.setAccount(toAccountResponse(user));
-        return response;
+            user.setEmail(accounteditRequest.getEmail());
+            user.setDateOfBirth(accounteditRequest.getDateOfBirth().toGregorianCalendar().getTime());
+            user.setName(accounteditRequest.getName());
+            user.setPassword(BCrypt.hashpw(accounteditRequest.getPassword(), BCrypt.gensalt()));
+            user.setRole(UserRole.USER);
+            user.setSurname(accounteditRequest.getSurname());
+            user.setUsername(accounteditRequest.getUsername());
+            userRepository.save(user);
+
+            response.setStatus("ok");
+            response.setAccount(toAccountResponse(user));
+            return response;
+        } else {
+            response.setError("You have to fill all fields");
+            response.setStatus("err");
+            return response;
+        }
     }
 
+    /**
+     * Logging user in and sending token for future communication
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "loginRequest")
     @ResponsePayload
     public LoginResponse login(@RequestPayload LoginRequest request) {
@@ -125,10 +160,59 @@ public class UserEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * Admin can set specific role to user
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "setUserRoleRequest")
     @ResponsePayload
-    public ErrorResponse setUserRole(@RequestPayload SetUserRoleRequest request) {
-        throw new NotImplementedException();
+    public SetUserRoleResponse setUserRole(@RequestPayload SetUserRoleRequest request) {
+        User user = checkToken(request.getToken());
+        if(user == null || user.getRole() != UserRole.ADMINISTRATOR) {
+            SetUserRoleResponse response = new SetUserRoleResponse();
+            response.setStatus("err");
+            response.setError("You have to be logged in as administrator");
+            return response;
+        }
+        User changeUser = userRepository.findOne(request.getUserId());
+        if(changeUser == null) {
+            SetUserRoleResponse response = new SetUserRoleResponse();
+            response.setStatus("err");
+            response.setError("User was not found");
+            return response;
+        }
+
+        changeUser.setRole(request.getUserRole());
+        userRepository.save(changeUser);
+
+        SetUserRoleResponse response = new SetUserRoleResponse();
+        response.setStatus("ok");
+        return response;
+    }
+
+    /**
+     * Crates logged user admin
+     * This method has to be deleted on the production!
+     * @param request
+     * @return
+     */
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "makeUserAdminRequest")
+    @ResponsePayload
+    public MakeUserAdminResponse makeUserAdmin(@RequestPayload MakeUserAdminRequest request) {
+        User user = checkToken(request.getToken());
+        MakeUserAdminResponse response = new MakeUserAdminResponse();
+
+        if(user == null) {
+            response.setStatus("err");
+            response.setError("User not logged in");
+            return response;
+        }
+
+        user.setRole(UserRole.ADMINISTRATOR);
+        userRepository.save(user);
+        response.setStatus("ok");
+        return response;
     }
 
 

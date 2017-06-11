@@ -34,8 +34,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "removeAuthorResponse")
-public class RemoveAuthorResponse
+@XmlRootElement(name = "setUserRoleResponse")
+public class SetUserRoleResponse
     extends ErrorResponse
 {
 

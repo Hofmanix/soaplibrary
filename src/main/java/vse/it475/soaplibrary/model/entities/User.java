@@ -3,6 +3,7 @@ package vse.it475.soaplibrary.model.entities;
 import io.spring.guides.gs_producing_web_service.UserRole;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public class User {
     private Date dateOfBirth;
     private UserRole role;
     private List<Book> tokens;
+
+    public User() {
+        tokens = new ArrayList<>();
+    }
 
     public String getId() {
         return id;

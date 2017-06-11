@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
- *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}errorResponse">
+ *     &lt;extension base="{http://spring.io/guides/gs-producing-web-service}authenticatedRequest">
  *       &lt;sequence>
  *       &lt;/sequence>
  *     &lt;/extension>
@@ -34,9 +34,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "removeAuthorResponse")
-public class RemoveAuthorResponse
-    extends ErrorResponse
+@XmlRootElement(name = "makeUserAdminRequest")
+public class MakeUserAdminRequest
+    extends AuthenticatedRequest
 {
 
 

@@ -18,6 +18,11 @@ import org.springframework.xml.xsd.XsdSchema;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
+    /**
+     * Bean for mapping calling actions
+     * @param applicationContext
+     * @return
+     */
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -26,16 +31,25 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean(servlet, "/ws/*");
     }
 
+    /**
+     * Sets required informations for generation of wsdl file
+     * @param librarySchema
+     * @return
+     */
     @Bean(name = "library")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema librarySchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("LibraryPort");
-        wsdl11Definition.setLocationUri("/ws");
+        wsdl11Definition.setLocationUri("http://localhost:8100/ws");
         wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
         wsdl11Definition.setSchema(librarySchema);
         return wsdl11Definition;
     }
 
+    /**
+     * Schemes path
+     * @return
+     */
     @Bean
     public XsdSchema librarySchema() {
         return new SimpleXsdSchema(new ClassPathResource("library.xsd"));

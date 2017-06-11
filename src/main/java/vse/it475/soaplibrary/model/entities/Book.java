@@ -2,6 +2,7 @@ package vse.it475.soaplibrary.model.entities;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,13 +15,14 @@ public class Book {
     private String name;
     private String isbn;
     private Date published;
-    private String language;
-    private String location;
-    private List<String> keywords;
     private String authorId;
     private List<BookCopy> copies;
     private List<BookingBook> bookings;
 
+    public Book() {
+        copies = new ArrayList<>();
+        bookings = new ArrayList<>();
+    }
 
     public String getId() {
         return id;
@@ -62,18 +64,6 @@ public class Book {
     public String getIsbn() { return isbn; }
 
     public void setIsbn(String isbn) { this.isbn = isbn; }
-
-    public String getLanguage() { return language; }
-
-    public void setLanguage(String language) { this.language = language; }
-
-    public String getLocation() { return location; }
-
-    public void setLocation(String location) { this.location = location; }
-
-    public List<String> getKeywords() { return keywords; }
-
-    public void setKeywords(List<String> keywords) { this.keywords = keywords; }
 
 
     public List<BookingBook> getBookings() {

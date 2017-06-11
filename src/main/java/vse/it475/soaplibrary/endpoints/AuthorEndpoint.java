@@ -8,6 +8,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import vse.it475.soaplibrary.model.entities.Author;
 import vse.it475.soaplibrary.model.entities.Book;
+import vse.it475.soaplibrary.model.entities.User;
 import vse.it475.soaplibrary.model.repositories.AuthorRepository;
 import vse.it475.soaplibrary.model.repositories.BookRepository;
 
@@ -23,8 +24,13 @@ public class AuthorEndpoint extends BaseEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     @Autowired
     private AuthorRepository authorRepository;
+    @Autowired
     private BookRepository bookRepository;
 
+    /**
+     * Returns list of all authors
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAuthorsRequest")
     @ResponsePayload
     public GetAuthorsResponse getAuthors() {
@@ -41,12 +47,25 @@ public class AuthorEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * Admin adds new authors
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addAuthorsRequest")
     @ResponsePayload
     public AddAuthorsResponse addAuthors(@RequestPayload AddAuthorsRequest request) {
+        User user = checkToken(request.getToken());
+        if(user == null || user.getRole() != UserRole.ADMINISTRATOR) {
+            AddAuthorsResponse response = new AddAuthorsResponse();
+            response.setStatus("err");
+            response.setError("You have to be logged in as administrator");
+        }
+        System.out.println("Authors: " + request.getAuthors().size());
         List<Author> authors = authorRepository.save(request.getAuthors().stream()
                 .filter(authorResponse -> authorResponse.getName() != null && !authorResponse.getName().trim().isEmpty())
                 .map(authorResponse -> {
+                    System.out.println("Author: " + authorResponse.getName());
                     Author author = new Author();
                     author.setName(authorResponse.getName());
                     return author;
@@ -59,9 +78,20 @@ public class AuthorEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * Admin removes author from db
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeAuthorRequest")
     @ResponsePayload
     public RemoveAuthorResponse removeAuthor(@RequestPayload RemoveAuthorRequest request) {
+        User user = checkToken(request.getToken());
+        if(user == null || user.getRole() != UserRole.ADMINISTRATOR) {
+            RemoveAuthorResponse response = new RemoveAuthorResponse();
+            response.setStatus("err");
+            response.setError("You have to be logged in as administrator");
+        }
         Author author = authorRepository.findOne(request.getAuthorId());
         RemoveAuthorResponse removeAuthorResponse = new RemoveAuthorResponse();
         if (author == null){

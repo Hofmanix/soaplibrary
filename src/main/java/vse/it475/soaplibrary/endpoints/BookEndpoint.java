@@ -31,6 +31,11 @@ public class BookEndpoint extends BaseEndpoint {
     @Autowired
     private AuthorRepository authorRepository;
 
+    /**
+     * Returns all books in the library
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBooksRequest")
     @ResponsePayload
     public GetBooksResponse getBooks(@RequestPayload GetBooksRequest request) {
@@ -56,6 +61,11 @@ public class BookEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * Returns just the selected book by its id
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBookRequest")
     @ResponsePayload
     public GetBookResponse getBook(@RequestPayload GetBookRequest request) {
@@ -71,6 +81,11 @@ public class BookEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * User boorows copy of the book if it is possible
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "borrowBookRequest")
     @ResponsePayload
     public BorrowBookResponse borrowBook(@RequestPayload BorrowBookRequest request) {
@@ -82,6 +97,12 @@ public class BookEndpoint extends BaseEndpoint {
             return response;
         }
         Book requestedBook = bookRepository.findOne(request.getBookId());
+        Optional<BookCopy> copy = requestedBook.getCopies().stream().filter(bookCopy -> bookCopy.isBorrowed() && bookCopy.getBorrowerId().equals(user.getId())).findAny();
+        if(copy.isPresent()) {
+            response.setStatus("err");
+            response.setError("You have already borrowed this book, you have to return it first.");
+            return response;
+        }
         List<BookCopy> copies = requestedBook.getCopies().stream().filter(bookCopy -> !bookCopy.isBorrowed()).collect(Collectors.toList());
         Date borrowFrom = new Date(request.getBeginDate().getMillisecond());
         Date borrowTo = new Date(request.getEndDate().getMillisecond());
@@ -103,7 +124,12 @@ public class BookEndpoint extends BaseEndpoint {
 
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "returnBook")
+    /**
+     * User returns book which he borrows
+     * @param request
+     * @return
+     */
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "returnBookRequest")
     @ResponsePayload
     public ReturnBookResponse returnBook(@RequestPayload ReturnBookRequest request) {
         ReturnBookResponse response = new ReturnBookResponse();
@@ -129,6 +155,11 @@ public class BookEndpoint extends BaseEndpoint {
         return response;
     }
 
+    /**
+     * User books book if it is possible
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "bookBookRequest")
     @ResponsePayload
     public BookBookResponse bookBook(@RequestPayload BookBookRequest request) {
@@ -140,6 +171,14 @@ public class BookEndpoint extends BaseEndpoint {
             return bookBookResponse;
         }
         Book book = bookRepository.findOne(request.getBookId());
+
+        Optional<BookingBook> myBook = book.getBookings().stream().filter(bookingBook -> bookingBook.getBookerId().equals(user.getId())).findAny();
+        if(myBook.isPresent()) {
+            bookBookResponse.setStatus("err");
+            bookBookResponse.setError("You have already booked this book, you have to cancel booking first.");
+            return bookBookResponse;
+        }
+
         List<BookCopy> copies = book.getCopies().stream().filter(bookCopy -> bookCopy.isBorrowed() && bookCopy.getTo().getTime() > request.getBeginDate().getMillisecond()).collect(Collectors.toList());
         List<BookingBook> bookingBooks = book.getBookings().stream().filter(bookingBook ->
                 (bookingBook.getBookFrom().getTime() < request.getBeginDate().getMillisecond() &&
@@ -152,7 +191,7 @@ public class BookEndpoint extends BaseEndpoint {
                 (bookingBook.getBookFrom().getTime() > request.getBeginDate().getMillisecond() &&
                  bookingBook.getBookFrom().getTime() < request.getEndDate().getMillisecond()   &&
                  bookingBook.getBookTo().getTime() > request.getEndDate().getMillisecond())).collect(Collectors.toList());
-        if (copies.size() <= bookingBooks.size()){
+        if (book.getCopies().size() <= copies.size() + bookingBooks.size()){
             bookBookResponse.setStatus("err");
             bookBookResponse.setError("No book for reservation");
             return bookBookResponse;
@@ -168,7 +207,12 @@ public class BookEndpoint extends BaseEndpoint {
         return bookBookResponse;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "cancelBooking")
+    /**
+     * User cancels book reservation
+     * @param request
+     * @return
+     */
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "cancelBookingRequest")
     @ResponsePayload
     public CancelBookingResponse cancelBooking(@RequestPayload CancelBookingRequest request) {
         CancelBookingResponse cancelBookingResponse = new CancelBookingResponse();
@@ -192,9 +236,21 @@ public class BookEndpoint extends BaseEndpoint {
     }
 
 
+    /**
+     * Admin adds new book
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addBooksRequest")
     @ResponsePayload
     public AddBooksResponse addBooks(@RequestPayload AddBooksRequest request) {
+        User user = checkToken(request.getToken());
+        if(user == null || user.getRole() != UserRole.ADMINISTRATOR) {
+            AddBooksResponse response = new AddBooksResponse();
+            response.setStatus("err");
+            response.setError("You have to be logged in as administrator");
+            return response;
+        }
         List<Book> books = bookRepository.save(request.getBooks().stream().filter(book -> {
             if(!authorRepository.exists(book.getAuthor().getId())) {
                 return false;
@@ -212,9 +268,6 @@ public class BookEndpoint extends BaseEndpoint {
             book.setAuthorId(bookResponse.getAuthor().getId());
             book.setName(bookResponse.getName());
             book.setIsbn(bookResponse.getIsbn());
-            book.setKeywords(bookResponse.getKeywords());
-            book.setLanguage(bookResponse.getLanguage());
-            book.setLocation(bookResponse.getLocation());
             book.setPublished(bookResponse.getPublished().toGregorianCalendar().getTime());
             List<BookCopy> copies = new ArrayList<>();
             for(int i = 0; i < bookResponse.getAvailable(); i++) {
@@ -231,9 +284,21 @@ public class BookEndpoint extends BaseEndpoint {
         return addBooksResponse;
     }
 
+    /**
+     * Admin removes book by its id
+     * @param request
+     * @return
+     */
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeBookRequest")
     @ResponsePayload
     public RemoveBookResponse removeBook(@RequestPayload RemoveBookRequest request) {
+        User user = checkToken(request.getToken());
+        if(user == null || user.getRole() != UserRole.ADMINISTRATOR) {
+            RemoveBookResponse response = new RemoveBookResponse();
+            response.setStatus("err");
+            response.setError("You have to be logged in as administrator");
+            return response;
+        }
         Book book = bookRepository.findOne(request.getBookId());
         RemoveBookResponse removeBookResponse = new RemoveBookResponse();
         if (book == null){
@@ -246,7 +311,11 @@ public class BookEndpoint extends BaseEndpoint {
         return removeBookResponse;
     }
 
-
+    /**
+     * Converts book entity from db to book response for return
+     * @param book
+     * @return
+     */
     private BookResponse convertToBookResponse(Book book) {
         BookResponse bookResponse = new BookResponse();
         bookResponse.setId(book.getId());
@@ -259,8 +328,6 @@ public class BookEndpoint extends BaseEndpoint {
         bookResponse.setAuthor(authorResponse);
         bookResponse.setAvailable((int)book.getCopies().stream().filter(copy -> !copy.isBorrowed()).count());
         bookResponse.setIsbn(book.getIsbn());
-        bookResponse.setLanguage(book.getLanguage());
-        bookResponse.setLocation(book.getLocation());
         bookResponse.setName(book.getName());
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
         gregorianCalendar.setTime(book.getPublished());
