@@ -40,7 +40,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema librarySchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("LibraryPort");
-        wsdl11Definition.setLocationUri("http://localhost:8100/ws");
+        wsdl11Definition.setLocationUri("http://library.hofmanix.cz/ws");
         wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
         wsdl11Definition.setSchema(librarySchema);
         return wsdl11Definition;

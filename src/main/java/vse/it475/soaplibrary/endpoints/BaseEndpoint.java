@@ -17,8 +17,12 @@ public class BaseEndpoint {
     private UserRepository userRepository;
 
     protected User checkToken(String token) {
-        String decodedToken = new String(Base64.decode(StringUtils.getBytesUtf8(token)));
-        String[] idAndToken = decodedToken.split(":");
-        return userRepository.findOne(idAndToken[0]);
+        try {
+            String decodedToken = new String(Base64.decode(StringUtils.getBytesUtf8(token)));
+            String[] idAndToken = decodedToken.split(":");
+            return userRepository.findOne(idAndToken[0]);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

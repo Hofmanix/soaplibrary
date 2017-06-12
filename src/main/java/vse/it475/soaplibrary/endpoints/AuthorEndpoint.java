@@ -60,6 +60,7 @@ public class AuthorEndpoint extends BaseEndpoint {
             AddAuthorsResponse response = new AddAuthorsResponse();
             response.setStatus("err");
             response.setError("You have to be logged in as administrator");
+            return response;
         }
         System.out.println("Authors: " + request.getAuthors().size());
         List<Author> authors = authorRepository.save(request.getAuthors().stream()
@@ -91,6 +92,7 @@ public class AuthorEndpoint extends BaseEndpoint {
             RemoveAuthorResponse response = new RemoveAuthorResponse();
             response.setStatus("err");
             response.setError("You have to be logged in as administrator");
+            return response;
         }
         Author author = authorRepository.findOne(request.getAuthorId());
         RemoveAuthorResponse removeAuthorResponse = new RemoveAuthorResponse();
